@@ -25,6 +25,19 @@ class Day05 {
             }
     }
 
+    fun moveCarters(moves: MutableList<Move>, stack: List<ArrayDeque<Char>>): List<ArrayDeque<Char>> {
+        moves.map { move ->
+            (1 .. move.quantity).forEach{ _ ->
+                val removedValue = stack[move.source].removeFirst()
+                stack[move.target].addFirst(removedValue)
+            }
+        }
+        return stack
+    }
+
+    fun getLastCarters(stack: List<ArrayDeque<Char>>): String {
+        return stack.map { it.first() }.toString()
+    }
 }
 data class Move(val quantity: Int, val source: Int, val target: Int) {
     companion object {
@@ -57,6 +70,12 @@ fun main() {
 
     lines.filter { it.contains("move") }.map { moves.add(Move.of(it)) }
 
-    moves.forEach { println(it) }
-    stacks.forEach { println(it) }
+//    moves.forEach { println(it) }
+//    stacks.forEach { println(it) }
+
+    val newStack = day05.moveCarters(moves, stacks)
+
+//    newStack.forEach{ println(it) }
+
+    println(day05.getLastCarters(newStack))
 }
