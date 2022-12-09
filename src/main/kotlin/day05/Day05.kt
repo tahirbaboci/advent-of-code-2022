@@ -1,3 +1,5 @@
+package day05
+
 import java.io.File
 
 class Day05 {
