@@ -12,6 +12,18 @@ class Day02 {
         Game.Lost to 0
     )
 
+    private val rulesPart2 = mapOf(
+        (Move.X to Move.A) to (Move.Z to Game.Lost),
+        (Move.X to Move.B) to (Move.X to Game.Lost),
+        (Move.X to Move.C) to (Move.Y to Game.Lost),
+        (Move.Y to Move.A) to (Move.X to Game.Draw),
+        (Move.Y to Move.B) to (Move.Y to Game.Draw),
+        (Move.Y to Move.C) to (Move.Z to Game.Draw),
+        (Move.Z to Move.A) to (Move.Y to Game.Win),
+        (Move.Z to Move.B) to (Move.Z to Game.Win),
+        (Move.Z to Move.C) to (Move.X to Game.Win),
+    )
+
     private val rules = mapOf(
         (Move.X to Move.A) to Game.Draw,
         (Move.X to Move.B) to Game.Lost,
@@ -40,18 +52,38 @@ class Day02 {
             }
             Pair(theMoves[0], theMoves[1])
         }
-        return calculatePoints(listOfMovePairs)
+        return calculatePointsPart2(listOfMovePairs)
     }
-    private fun calculatePoints(moves: List<Pair<Move, Move>>): Int {
+    private fun calculatePointsPart1(moves: List<Pair<Move, Move>>): Int {
+        // Part 1
         val gp = moves.map { m ->
             val rule = rules[(m.second to m.first)]
            gamePoints[rule] ?: 0
         }.reduce { acc, i -> acc.plus(i) }
+
         val mp = moves.map { m ->
             movePoints[m.second] ?: 0
         }.reduce { acc, i -> acc.plus(i) }
+
         return gp.plus(mp)
     }
+
+    private fun calculatePointsPart2(moves: List<Pair<Move, Move>>): Int {
+        // Part 2
+        val gpPart2 = moves.map { m ->
+            val rule = rulesPart2[(m.second to m.first)]
+            val a = gamePoints[rule?.second] ?: 0
+            a
+        }.reduce { acc, i -> acc.plus(i) }
+
+        val mp2 = moves.map { m ->
+            val rule = rulesPart2[(m.second to m.first)]
+            movePoints[rule?.first] ?: 0
+        }.reduce { acc, i -> acc.plus(i) }
+
+        return gpPart2.plus(mp2)
+    }
+
 }
 sealed class Game {
     object Lost: Game()
